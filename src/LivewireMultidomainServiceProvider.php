@@ -2,9 +2,9 @@
 
 namespace Foxws\LivewireMultidomain;
 
+use Foxws\LivewireMultidomain\Commands\LivewireMultidomainCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Foxws\LivewireMultidomain\Commands\LivewireMultidomainCommand;
 
 class LivewireMultidomainServiceProvider extends PackageServiceProvider
 {
