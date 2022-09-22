@@ -3,7 +3,7 @@
 namespace Foxws\LivewireMultidomain\Support;
 
 use Exception;
-use Foxws\LivewireMultidomain\Components\Component\LivewireComponents;
+use Foxws\LivewireMultidomain\Domains\Domain\LivewireDomain;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
@@ -16,14 +16,14 @@ class LivewireComponentsFinder
 {
     protected array $manifest = [];
 
-    public function build(Collection $components): void
+    public function build(Collection $domains): void
     {
-        $this->manifest = $components->flatMap(
-            fn (LivewireComponents $component) => $this
-                ->getClassNames($component->getNamespace())
+        $this->manifest = $domains->flatMap(
+            fn (LivewireDomain $domain) => $this
+                ->getClassNames($domain->getNamespace())
                 ->mapWithKeys(fn (string $class) => $this->getComponentName(
-                    $component->getNamespace(),
-                    $component->getName(),
+                    $domain->getNamespace(),
+                    $domain->getName(),
                     $class
                 ))
         )->toArray();

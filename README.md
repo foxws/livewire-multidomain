@@ -1,19 +1,17 @@
-# Use Livewire in a multidomain environment 
+# Use Livewire in a multidomain environment
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/foxws/livewire-multidomain.svg?style=flat-square)](https://packagist.org/packages/foxws/livewire-multidomain)
 [![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/foxws/livewire-multidomain/run-tests?label=tests)](https://github.com/foxws/livewire-multidomain/actions?query=workflow%3Arun-tests+branch%3Amain)
 [![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/foxws/livewire-multidomain/Fix%20PHP%20code%20style%20issues?label=code%20style)](https://github.com/foxws/livewire-multidomain/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/foxws/livewire-multidomain.svg?style=flat-square)](https://packagist.org/packages/foxws/livewire-multidomain)
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+## Description
 
-## Support us
+This package allows a single Livewire application to work with multiple domains/tenants.
 
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/livewire-multidomain.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/livewire-multidomain)
+It is intended to complement a multi-tenancy package such as [spatie/laravel-multitenancy](https://github.com/spatie/laravel-multitenancy), [archtechx/tenancy](https://github.com/archtechx/tenancy), etc.
 
-We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
-
-We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
+It allows caching of components, and is made to be easy to install, as there is no need to modify the core of the Laravel Framework.
 
 ## Installation
 
@@ -23,38 +21,45 @@ You can install the package via composer:
 composer require foxws/livewire-multidomain
 ```
 
-You can publish and run the migrations with:
-
-```bash
-php artisan vendor:publish --tag="livewire-multidomain-migrations"
-php artisan migrate
-```
-
-You can publish the config file with:
-
-```bash
-php artisan vendor:publish --tag="livewire-multidomain-config"
-```
-
-This is the contents of the published config file:
-
-```php
-return [
-];
-```
-
-Optionally, you can publish the views using
-
-```bash
-php artisan vendor:publish --tag="livewire-multidomain-views"
-```
-
 ## Usage
 
+Create a service provider, e.g. `LivewireServiceProvider`, and [register](https://laravel.com/docs/9.x/providers#registering-providers) the provider:
+
 ```php
-$livewireMultidomain = new Foxws\LivewireMultidomain();
-echo $livewireMultidomain->echoPhrase('Hello, Foxws!');
+use Foxws\LivewireMultidomain\Domains\Domain\LivewireDomain;
+use Foxws\LivewireMultidomain\Facades\LivewireMultidomain;
+use Illuminate\Support\ServiceProvider;
+
+class LivewireServiceProvider extends ServiceProvider
+{
+    public function register(): void
+    {
+        LivewireMultidomain::domains([
+            LivewireDomain::new()
+                ->name('foo')
+                ->namespace('App\\Domain\\Foo\Resources\\Components'),
+
+            LivewireDomain::new()
+                ->name('bar')
+                ->namespace('App\\Domain\\Bar\Resources\\Components'),
+        ]);
+    }
+}
 ```
+
+To render a component:
+
+```php
+// @livewire blade directive
+@livewire('foo::component-name')
+@livewire('bar::component-name')
+
+// <livewire: tag syntax
+<livewire:foo::component-name />
+<livewire:bar::component-name />
+```
+
+Tip: To verify the names of the components, checkout `bootstrap/cache/livewire-components.php`.
 
 ## Testing
 

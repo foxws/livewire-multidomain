@@ -1,8 +1,8 @@
 <?php
 
-namespace Foxws\LivewireMultidomain\Components;
+namespace Foxws\LivewireMultidomain\Domains;
 
-abstract class Component
+abstract class Domain
 {
     protected ?string $name = null;
 

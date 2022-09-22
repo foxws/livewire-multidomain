@@ -2,36 +2,36 @@
 
 namespace Foxws\LivewireMultidomain;
 
-use Foxws\LivewireMultidomain\Components\Component;
+use Foxws\LivewireMultidomain\Domains\Domain;
 use Foxws\LivewireMultidomain\Support\LivewireComponentsFinder;
 use Illuminate\Support\Collection;
 
 class LivewireMultidomain
 {
-    /** @var array<int, Component> */
-    protected array $components = [];
+    /** @var array<int, Domain> */
+    protected array $domains = [];
 
-    /** @param  array<int, Component>  $components */
-    public function components(array $components): self
+    /** @param  array<int, Domain>  $domains */
+    public function domains(array $domains): self
     {
-        $this->components = array_merge($this->components, $components);
+        $this->domains = array_merge($this->domains, $domains);
 
         (new LivewireComponentsFinder())
-            ->build($this->registeredComponents());
+            ->build($this->registeredDomains());
 
         return $this;
     }
 
-    public function clearComponents(): self
+    public function clearDomains(): self
     {
-        $this->components = [];
+        $this->domains = [];
 
         return $this;
     }
 
-    /** @return Collection<int, Component> */
-    public function registeredComponents(): Collection
+    /** @return Collection<int, Domain> */
+    public function registeredDomains(): Collection
     {
-        return collect($this->components);
+        return collect($this->domains);
     }
 }
