@@ -11,7 +11,7 @@ class LivewireMultidomain
     /** @var array<int, Component> */
     protected array $components = [];
 
-    /** @param array<int, Component> $components */
+    /** @param  array<int, Component>  $components */
     public function components(array $components): self
     {
         $this->components = array_merge($this->components, $components);

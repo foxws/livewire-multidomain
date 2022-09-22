@@ -2,7 +2,6 @@
 
 namespace Foxws\LivewireMultidomain;
 
-use Foxws\LivewireMultidomain\Commands\LivewireMultidomainCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -15,7 +14,7 @@ class LivewireMultidomainServiceProvider extends PackageServiceProvider
             ->hasCommands(
                 // CacheCommand::class,
                 // ClearCommand::class,
-            );;
+            );
     }
 
     public function packageRegistered(): void

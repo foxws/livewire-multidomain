@@ -89,7 +89,7 @@ class LivewireComponentsFinder
             ->implode('.');
 
         if (str($fullName)->startsWith($namespace)) {
-            return ["{$name}::" . (string) str($fullName)->substr(strlen($namespace) + 1) => $class];
+            return ["{$name}::".(string) str($fullName)->substr(strlen($namespace) + 1) => $class];
         }
 
         return [$fullName => $class];
