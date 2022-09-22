@@ -10,16 +10,17 @@ class LivewireMultidomainServiceProvider extends PackageServiceProvider
 {
     public function configurePackage(Package $package): void
     {
-        /*
-         * This class is a Package Service Provider
-         *
-         * More info: https://github.com/spatie/laravel-package-tools
-         */
         $package
             ->name('livewire-multidomain')
-            ->hasConfigFile()
-            ->hasViews()
-            ->hasMigration('create_livewire-multidomain_table')
-            ->hasCommand(LivewireMultidomainCommand::class);
+            ->hasCommands(
+                // CacheCommand::class,
+                // ClearCommand::class,
+            );;
+    }
+
+    public function packageRegistered(): void
+    {
+        $this->app->singleton(LivewireMultidomain::class, fn () => new LivewireMultidomain());
+        $this->app->bind('livewire-multidomain', LivewireMultidomain::class);
     }
 }
