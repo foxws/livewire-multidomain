@@ -23,6 +23,12 @@ composer require foxws/livewire-multidomain
 
 ## Usage
 
+Update `config/livewire.php`:
+
+```php
+'class_namespace' => 'App',
+```
+
 Create a service provider, e.g. `LivewireServiceProvider`, and [register](https://laravel.com/docs/9.x/providers#registering-providers) the provider:
 
 ```php
@@ -58,8 +64,6 @@ To render a component:
 <livewire:foo::component-name />
 <livewire:bar::component-name />
 ```
-
-Tip: To verify the names of the components, checkout `bootstrap/cache/livewire-components.php`.
 
 ## Testing
 
