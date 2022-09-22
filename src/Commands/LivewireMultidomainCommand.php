@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace Foxws\LivewireMultidomain\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class LivewireMultidomainCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'livewire-multidomain';
 
     public $description = 'My command';
 
