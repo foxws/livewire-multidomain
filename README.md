@@ -11,8 +11,6 @@ This package allows a single Livewire application to work with multiple domains/
 
 It is intended to complement a multi-tenancy package such as [spatie/laravel-multitenancy](https://github.com/spatie/laravel-multitenancy), [archtechx/tenancy](https://github.com/archtechx/tenancy), etc.
 
-It allows caching of components, and is made to be easy to install, as there is no need to modify the core of the Laravel Framework.
-
 ## Installation
 
 You can install the package via composer:
