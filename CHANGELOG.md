@@ -2,6 +2,10 @@
 
 All notable changes to `livewire-multidomain` will be documented in this file.
 
+## 0.0.3 - 2022-09-23
+
+- Write to manifest
+
 ## 0.0.2 - 2022-09-22
 
 - Use LivewireManager to register components
