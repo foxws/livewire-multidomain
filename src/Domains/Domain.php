@@ -2,12 +2,11 @@
 
 namespace Foxws\LivewireMultidomain\Domains;
 
-abstract class Domain
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Support\Arr;
+
+abstract class Domain implements Arrayable
 {
-    protected ?string $name = null;
-
-    protected ?string $namespace = null;
-
     final public function __construct()
     {
     }
@@ -19,35 +18,36 @@ abstract class Domain
         return $instance;
     }
 
-    public function name(string $name): self
+    public function attribute(string $key, mixed $default = null): mixed
     {
-        $this->name = $name;
+        return Arr::get($this->attributes, $key, $default);
+    }
+
+    public function attributes(array|callable $attributes): self
+    {
+        if (is_callable($attributes)) {
+            $this->callableAttributes = $attributes;
+        }
+
+        if (is_array($attributes)) {
+            $this->attributes = array_merge($this->attributes, $attributes);
+        }
 
         return $this;
     }
 
-    public function namespace(string $namespace): self
+    public function __get(string $key): mixed
     {
-        $this->namespace = $namespace;
-
-        return $this;
+        return $this->attribute($key);
     }
 
-    public function getName(): string
+    public function __set(string $key, mixed $value): void
     {
-        if ($this->name) {
-            return $this->name;
-        }
-
-        return '';
+        $this->attributes[$key] = $value;
     }
 
-    public function getNamespace(): string
+    public function __isset(string $key): bool
     {
-        if ($this->namespace) {
-            return $this->namespace;
-        }
-
-        return '';
+        return isset($this->attributes[$key]);
     }
 }

@@ -29,6 +29,12 @@ Update `config/livewire.php`:
 'class_namespace' => 'App',
 ```
 
+Regenerate the Livewire component auto-discovery manifest:
+
+```bash
+php artisan livewire:discover
+```
+
 Create a service provider, e.g. `LivewireServiceProvider`, and [register](https://laravel.com/docs/9.x/providers#registering-providers) the provider:
 
 ```php

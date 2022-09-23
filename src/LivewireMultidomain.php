@@ -16,7 +16,7 @@ class LivewireMultidomain
     {
         $this->domains = array_merge($this->domains, $domains);
 
-        (new LivewireComponentsFinder())
+        app(LivewireComponentsFinder::class)
             ->build($this->registeredDomains());
 
         return $this;
