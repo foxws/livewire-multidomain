@@ -1,53 +1,65 @@
 <?php
 
-namespace Foxws\LivewireMultidomain\Support;
+namespace Foxws\LivewireMultiDomain\Support;
 
-use Foxws\LivewireMultidomain\Domains\Domain\LivewireDomain;
+use Foxws\MultiDomain\Domains\Domain\MultiDomain;
+use Foxws\MultiDomain\MultiDomainRepository;
+use Illuminate\Cache\Repository as CacheRepository;
+use Illuminate\Config\Repository as ConfigRepository;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use Livewire\Commands\ComponentParser;
 use Livewire\Component;
-use Livewire\LivewireManager;
 use ReflectionClass;
 use Symfony\Component\Finder\SplFileInfo;
 
 class LivewireComponentsFinder
 {
-    public function build(Collection $domains): void
-    {
-        $manifest = $domains->flatMap(
-            fn (LivewireDomain $domain) => $this
-                ->getClassNames($domain->namespace)
-                ->mapWithKeys(function ($class) use ($domain) {
-                    $alias = $this->getComponentAlias(
-                        $domain->namespace,
-                        $domain->name,
-                        $class
-                    );
+    public function __construct(
+        protected CacheRepository $cache,
+        protected ConfigRepository $config,
+        protected MultiDomainRepository $repository,
+        protected Filesystem $files,
+    ) {
+    }
 
-                    return [$alias => $class];
+    public function manifest(): array
+    {
+        if (! $this->config->get('livewire-multidomain.cache_enabled')) {
+            return $this->scan();
+        }
+
+        return $this->cached();
+    }
+
+    protected function scan(): array
+    {
+        $domains = collect($this->repository->all());
+
+        $manifest = $domains->flatMap(
+            fn (MultiDomain $domain) => $this
+                ->classNames($domain->name)
+                ->mapWithKeys(function ($class) use ($domain) {
+                    $key = $this->componentAlias($domain->name, $class);
+                    return [$key => $class];
                 })
         );
 
-        $this->register($manifest);
+        return $manifest->toArray();
     }
 
-    protected function register(Collection $manifest): void
+    protected function cached(): array
     {
-        $manifest->each(
-            fn (string $class, string $alias) => app(LivewireManager::class)->component($alias, $class)
-        );
+        $ttl = $this->config->get('livewire-multidomain.cache_lifetime');
+
+        return $this->cache->remember('livewire-multidomain', $ttl, function () {
+            return $this->scan();
+        });
     }
 
-    protected function getNamespacePath(string $path): string
+    protected function componentAlias(string $name, string $class): string
     {
-        return ComponentParser::generatePathFromNamespace($path);
-    }
-
-    protected function getComponentAlias(string $namespace, string $name, string $class): string
-    {
-        $namespace = collect(explode('.', str_replace(['/', '\\'], '.', $namespace)))
+        $namespace = collect(explode('.', str_replace(['/', '\\'], '.', $this->namespace($name))))
             ->map([Str::class, 'kebab'])
             ->implode('.');
 
@@ -56,21 +68,21 @@ class LivewireComponentsFinder
             ->implode('.');
 
         if (str($fullName)->startsWith($namespace)) {
-            return "{$name}::".(string) str($fullName)->substr(strlen($namespace) + 1);
+            return strtolower($name).'::'.(string) str($fullName)->substr(strlen($namespace) + 1);
         }
 
-        return "{$name}::{$fullName}";
+        return $fullName;
     }
 
-    protected function getClassNames(string $namespace): Collection
+    protected function classNames(string $name): Collection
     {
-        $path = $this->getNamespacePath($namespace);
+        $path = namespace_path($this->namespace($name));
 
-        if (! File::exists($path)) {
+        if (! $this->files->exists($path)) {
             return collect();
         }
 
-        return collect(File::allFiles($path))
+        return collect($this->files->allFiles($path))
             ->map(function (SplFileInfo $file) {
                 return app()->getNamespace().
                     str($file->getPathname())
@@ -81,5 +93,12 @@ class LivewireComponentsFinder
                 return is_subclass_of($class, Component::class) &&
                     ! (new ReflectionClass($class))->isAbstract();
             });
+    }
+
+    protected function namespace(string $name): string
+    {
+        $namespace = $this->config->get('multidomain.namespace');
+
+        return "{$namespace}\\{$name}\\Resources\\Components";;
     }
 }
