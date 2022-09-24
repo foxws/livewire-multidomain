@@ -9,7 +9,9 @@
 
 This package allows a single Livewire application to work with multiple domains/tenants.
 
-It is intended to complement a multi-tenancy package such as [spatie/laravel-multitenancy](https://github.com/spatie/laravel-multitenancy), [archtechx/tenancy](https://github.com/archtechx/tenancy), etc.
+It is intended to complement a multi-tenancy package such as [spatie/laravel-multitenancy](https://github.com/spatie/laravel-multitenancy) (tested), [archtechx/tenancy](https://github.com/archtechx/tenancy), etc.
+
+> **NOTE:** This package requires [foxws/laravel-multidomain](https://github.com/foxws/laravel-multidomain).
 
 ## Installation
 
@@ -18,6 +20,8 @@ You can install the package via composer:
 ```bash
 composer require foxws/livewire-multidomain
 ```
+
+Setup a working multidomain environment by installing and configuring [foxws/laravel-multidomain](https://github.com/foxws/laravel-multidomain).
 
 ## Usage
 
@@ -33,31 +37,7 @@ Regenerate the Livewire component auto-discovery manifest:
 php artisan livewire:discover
 ```
 
-Create a service provider, e.g. `LivewireServiceProvider`, and [register](https://laravel.com/docs/9.x/providers#registering-providers) the provider:
-
-```php
-use Foxws\LivewireMultidomain\Domains\Domain\LivewireDomain;
-use Foxws\LivewireMultidomain\Facades\LivewireMultidomain;
-use Illuminate\Support\ServiceProvider;
-
-class LivewireServiceProvider extends ServiceProvider
-{
-    public function register(): void
-    {
-        LivewireMultidomain::domains([
-            LivewireDomain::new()
-                ->name('foo')
-                ->namespace('App\\Domain\\Foo\Resources\\Components'),
-
-            LivewireDomain::new()
-                ->name('bar')
-                ->namespace('App\\Domain\\Bar\Resources\\Components'),
-        ]);
-    }
-}
-```
-
-To render a component:
+To render a component with domain `foo` or `bar`:
 
 ```php
 // @livewire blade directive
@@ -89,7 +69,8 @@ Please review [our security policy](../../security/policy) on how to report secu
 
 ## Credits
 
-- [foxws](https://github.com/foxws)
+- [Livewire](https://github.com/livewire)
+- [Spatie](https://github.com/spatie)
 - [All Contributors](../../contributors)
 
 ## License
