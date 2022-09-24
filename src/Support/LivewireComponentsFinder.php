@@ -41,6 +41,7 @@ class LivewireComponentsFinder
                 ->classNames($domain->name)
                 ->mapWithKeys(function ($class) use ($domain) {
                     $key = $this->componentAlias($domain->name, $class);
+
                     return [$key => $class];
                 })
         );
@@ -99,6 +100,6 @@ class LivewireComponentsFinder
     {
         $namespace = $this->config->get('multidomain.namespace');
 
-        return "{$namespace}\\{$name}\\Resources\\Components";;
+        return "{$namespace}\\{$name}\\Resources\\Components";
     }
 }
