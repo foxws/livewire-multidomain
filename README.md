@@ -69,7 +69,6 @@ Please review [our security policy](../../security/policy) on how to report secu
 
 ## Credits
 
-- [foxws](https://github.com/foxws)
 - [Livewire](https://github.com/livewire)
 - [Spatie](https://github.com/spatie)
 - [All Contributors](../../contributors)
