@@ -13,6 +13,8 @@ It is intended to complement a multi-tenancy package such as [spatie/laravel-mul
 
 > **NOTE:** This package requires [foxws/laravel-multidomain](https://github.com/foxws/laravel-multidomain).
 
+> **TIP:** See [foxws/laravel-multidomain-demo](https://github.com/foxws/laravel-multidomain-demo) for a boilerplate.
+
 ## Installation
 
 You can install the package via composer:
