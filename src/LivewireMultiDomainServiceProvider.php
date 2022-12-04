@@ -2,7 +2,10 @@
 
 namespace Foxws\LivewireMultiDomain;
 
-use Foxws\LivewireMultiDomain\Commands\ClearCommand;
+use Illuminate\Foundation\Application;
+use Livewire\LivewireManager;
+use Foxws\LivewireMultiDomain\Providers\LivewireServiceProvider;
+use Foxws\LivewireMultiDomain\Support\LivewireManager as Handler;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -11,24 +14,15 @@ class LivewireMultiDomainServiceProvider extends PackageServiceProvider
     public function configurePackage(Package $package): void
     {
         $package
-            ->name('livewire-multidomain')
-            ->hasConfigFile()
-            ->hasCommands(
-                ClearCommand::class,
-            );
+            ->name('livewire-multidomain');
     }
 
     public function packageRegistered(): void
     {
-        $this->app->singleton(LivewireMultiDomain::class, function ($app) {
-            return new LivewireMultiDomain($app->make(LivewireMultiDomainRepository::class));
-        });
+        $this->app->singleton(LivewireMultiDomain::class);
+        $this->app->alias(LivewireMultiDomain::class, 'livewire-multidomain');
 
-        $this->app->bind('livewire-multidomain', LivewireMultiDomain::class);
-    }
-
-    public function packageBooted(): void
-    {
-        $this->app->make(LivewireMultiDomain::class)->boot();
+        $this->app->singleton(LivewireServiceProvider::class, fn (Application $app, array $parameters) => new LivewireServiceProvider($app, $parameters));
+        $this->app->singleton(LivewireManager::class, Handler::class);
     }
 }

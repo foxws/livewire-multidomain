@@ -9,7 +9,7 @@
 
 This package allows a single Livewire application to work with multiple domains/tenants.
 
-It is intended to complement a multi-tenancy package such as [spatie/laravel-multitenancy](https://github.com/spatie/laravel-multitenancy) (tested), [archtechx/tenancy](https://github.com/archtechx/tenancy), etc.
+It is intended to complement a multi-tenancy package such as [spatie/laravel-multitenancy](https://github.com/spatie/laravel-multitenancy) (tested and supported), [archtechx/tenancy](https://github.com/archtechx/tenancy), etc.
 
 > **NOTE:** This package requires [foxws/laravel-multidomain](https://github.com/foxws/laravel-multidomain).
 
@@ -23,15 +23,45 @@ You can install the package via composer:
 composer require foxws/livewire-multidomain
 ```
 
-Setup a working multidomain environment by installing and configuring [foxws/laravel-multidomain](https://github.com/foxws/laravel-multidomain).
-
-## Usage
-
 Update `config/livewire.php`:
 
 ```php
 'class_namespace' => 'App',
 ```
+
+Setup a working multidomain environment by installing and configuring [foxws/laravel-multidomain](https://github.com/foxws/laravel-multidomain).
+
+### Laravel Multitenancy
+
+When using Spatie's [laravel-multitenancy](https://github.com/spatie/laravel-multitenancy), one may want to use the following task to auto register service providers for each domain:
+
+> **NOTE:** Please see [documentation](https://spatie.be/docs/laravel-multitenancy/v2/using-tasks-to-prepare-the-environment/creating-your-own-task) for details.
+
+```php
+<?php
+
+namespace App\Core\Support\Multitenancy\Tasks;
+
+use Foxws\LivewireMultiDomain\Facades\LivewireMultiDomain;
+use Foxws\MultiDomain\Facades\MultiDomain;
+use Spatie\Multitenancy\Models\Tenant;
+use Spatie\Multitenancy\Tasks\SwitchTenantTask;
+
+class SwitchDomainTask implements SwitchTenantTask
+{
+    public function makeCurrent(Tenant $tenant): void
+    {
+        MultiDomain::initialize($tenant->domain);
+        LivewireMultiDomain::initialize($tenant->domain);
+    }
+
+    public function forgetCurrent(): void
+    {
+    }
+}
+```
+
+## Usage
 
 Regenerate the Livewire component auto-discovery manifest:
 
@@ -39,16 +69,14 @@ Regenerate the Livewire component auto-discovery manifest:
 php artisan livewire:discover
 ```
 
-To render a component with domain `foo` or `bar`:
+To render a component with domain using name `Foo`:
 
 ```php
 // @livewire blade directive
-@livewire('foo::component-name')
-@livewire('bar::component-name')
+@livewire('foo.component-name')
 
 // <livewire: tag syntax
-<livewire:foo::component-name />
-<livewire:bar::component-name />
+<livewire:foo.component-name />
 ```
 
 ## Testing
