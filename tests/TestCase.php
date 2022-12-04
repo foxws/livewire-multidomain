@@ -2,9 +2,9 @@
 
 namespace Foxws\LivewireMultidomain\Tests;
 
+use Foxws\LivewireMultidomain\LivewireMultidomainServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Foxws\LivewireMultidomain\LivewireMultidomainServiceProvider;
 
 class TestCase extends Orchestra
 {

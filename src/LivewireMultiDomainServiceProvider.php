@@ -2,10 +2,10 @@
 
 namespace Foxws\LivewireMultiDomain;
 
-use Illuminate\Foundation\Application;
-use Livewire\LivewireManager;
 use Foxws\LivewireMultiDomain\Providers\LivewireServiceProvider;
 use Foxws\LivewireMultiDomain\Support\LivewireManager as Handler;
+use Illuminate\Foundation\Application;
+use Livewire\LivewireManager;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 

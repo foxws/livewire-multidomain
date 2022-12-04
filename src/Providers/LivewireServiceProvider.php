@@ -2,10 +2,10 @@
 
 namespace Foxws\LivewireMultiDomain\Providers;
 
-use Illuminate\Filesystem\Filesystem;
-use Livewire\Commands\ComponentParser;
 use Foxws\LivewireMultiDomain\Support\LivewireComponentsFinder;
 use Foxws\MultiDomain\Providers\DomainServiceProvider;
+use Illuminate\Filesystem\Filesystem;
+use Livewire\Commands\ComponentParser;
 
 class LivewireServiceProvider extends DomainServiceProvider
 {
