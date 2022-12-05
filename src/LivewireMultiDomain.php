@@ -10,8 +10,10 @@ class LivewireMultiDomain extends MultiDomain
     public function initialize(string $domain): void
     {
         $domain = $this->findByDomain($domain);
-        
-        if (! $domain) return;
+
+        if (! $domain) {
+            return;
+        }
 
         $provider = $this->app->make(LivewireServiceProvider::class, compact('domain'));
 
